@@ -7,6 +7,7 @@ ENV WGETRC /tmp/.wgetrc
 ADD ./conf/supervisord/ipynotebook.conf /etc/supervisor.d/ipynotebook.conf
 ADD ./conf/supervisord/sshd.conf /etc/supervisor.d/sshd.conf
 ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
+ADD ./ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu quantal main universe" > /etc/apt/sources.list
@@ -25,14 +26,15 @@ RUN chmod +x /tmp/bootstrap-py.sh && /tmp/bootstrap-py.sh
 # Add username with which ipython notebook will be started. 
 RUN useradd -D --shell=/bin/bash
 RUN useradd -m ipy
-RUN echo "ipy:secret" | chpasswd
+RUN echo "ipy:coo5Iehaepa." | chpasswd
 RUN adduser ipy sudo
-RUN sudo -u ipy mkdir  -p /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
+RUN sudo -u ipy mkdir  -p /home/ipy/.matplotlib /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
 
 RUN mkdir -p /var/run/sshd
-RUN echo root:password | chpasswd
+RUN echo "root:Zoh7sooGh\um" | chpasswd
 
 ENV IPYTHONDIR /home/ipy/.ipython
+ENV MPLCONFIGDIR /home/ipy/.matplotlib
 
 EXPOSE 22
 EXPOSE 8888
