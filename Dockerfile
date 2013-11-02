@@ -10,6 +10,9 @@ ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
 ADD ./conf/ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
 
+# Make sure that file ownership and permissions are correct.
+RUN chown -R 0:0 /etc/supervisor.d/ /root/.ssh/authorized_keys
+
 RUN echo "deb http://archive.ubuntu.com/ubuntu quantal main universe" > /etc/apt/sources.list
 RUN apt-get update
 
@@ -38,6 +41,9 @@ ENV MPLCONFIGDIR /home/ipy/.matplotlib
 
 EXPOSE 22
 EXPOSE 8888
+
+# Make sure that file ownership and permissions are correct.
+RUN chown -R 0:0 /etc/supervisor.d/ /root/.ssh/authorized_keys; chmod 400 /root/.ssh/authorized_keys
 
 # the following command works when running docker as a daemon, but it doesn't when running docker interactively:
 CMD /usr/local/bin/supervisord -n 
