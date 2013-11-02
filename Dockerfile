@@ -21,8 +21,6 @@ RUN apt-get install -y --no-install-recommends \
                 ipython-notebook python-pandas \
                 python-nose openssh-server
 
-# We need to make sure that script used to dd
-RUN chmod +x /usr/local/bin/run-nbserver.sh
 RUN chmod +x /tmp/bootstrap-py.sh && /tmp/bootstrap-py.sh
 
 # Add username with which ipython notebook will be started. 
