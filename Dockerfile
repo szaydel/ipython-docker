@@ -7,7 +7,7 @@ ENV WGETRC /tmp/.wgetrc
 ADD ./conf/supervisord/ipynotebook.conf /etc/supervisor.d/ipynotebook.conf
 ADD ./conf/supervisord/sshd.conf /etc/supervisor.d/sshd.conf
 ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
-ADD ./ssh/authorized_keys /root/.ssh/authorized_keys
+ADD ./conf/ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu quantal main universe" > /etc/apt/sources.list
