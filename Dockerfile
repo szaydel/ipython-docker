@@ -1,4 +1,4 @@
-# VERSION 1.0.3
+# VERSION 1.0.4
 
 FROM ubuntu:quantal
 MAINTAINER Sam Zaydel "szaydel@gmail.com"
@@ -9,9 +9,6 @@ ADD ./conf/supervisord/sshd.conf /etc/supervisor.d/sshd.conf
 ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
 ADD ./conf/ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
-
-# Make sure that file ownership and permissions are correct.
-RUN chown -R 0:0 /etc/supervisor.d/ /root/.ssh/authorized_keys
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu quantal main universe" > /etc/apt/sources.list
 RUN apt-get update
@@ -24,6 +21,8 @@ RUN apt-get install -y --no-install-recommends \
                 ipython-notebook python-pandas \
                 python-nose openssh-server
 
+# We need to make sure that script used to dd
+RUN chmod +x /usr/local/bin/run-nbserver.sh
 RUN chmod +x /tmp/bootstrap-py.sh && /tmp/bootstrap-py.sh
 
 # Add username with which ipython notebook will be started. 
@@ -31,7 +30,12 @@ RUN useradd -D --shell=/bin/bash
 RUN useradd -m ipy
 RUN echo "ipy:coo5Iehaepa." | chpasswd
 RUN adduser ipy sudo
-RUN sudo -u ipy mkdir  -p /home/ipy/.matplotlib /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
+RUN sudo -u ipy mkdir -p /home/ipy/bin /home/ipy/.matplotlib /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
+
+# Adding script necessary to start ipython notebook server.
+ADD ./bin/run-nbserver.sh /home/ipy/bin/run-nbserver.sh
+ADD ./conf/ipython/ipython_notebook_config_extra.py /home/ipy/.python/ipython_notebook_config_extra.py
+RUN chown ipy:ipy /home/ipy/.python/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh && chmod +x /home/ipy/bin/run-nbserver.sh
 
 RUN mkdir -p /var/run/sshd
 RUN echo "root:Zoh7sooGh\um" | chpasswd
