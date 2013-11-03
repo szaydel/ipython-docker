@@ -33,7 +33,7 @@ RUN sudo -u ipy mkdir -p /home/ipy/bin /home/ipy/.matplotlib /home/ipy/.ipython 
 # Adding script necessary to start ipython notebook server.
 ADD ./bin/run-nbserver.sh /home/ipy/bin/run-nbserver.sh
 ADD ./conf/ipython/ipython_notebook_config_extra.py /home/ipy/.ipython/ipython_notebook_config_extra.py
-RUN chown ipy:ipy /home/ipy/.python/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh && chmod +x /home/ipy/bin/run-nbserver.sh
+RUN chown ipy:ipy /home/ipy/.ipython/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh && chmod +x /home/ipy/bin/run-nbserver.sh
 
 RUN mkdir -p /var/run/sshd
 RUN echo "root:Zoh7sooGh\um" | chpasswd

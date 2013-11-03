@@ -603,4 +603,4 @@ c.NotebookManager.notebook_dir = u'{0}'.format(os.environ['IPYTHON_NOTEBOOKSDIR'
 # c.FileNotebookManager.save_script = False
 
 # The directory to use for notebooks.
-c.FileNotebookManager.notebook_dir = u'/Users/ipy/ipynotebooks'
+c.FileNotebookManager.notebook_dir = u'{0}'.format(os.environ['IPYTHON_NOTEBOOKSDIR'])
