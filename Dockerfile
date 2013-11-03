@@ -32,7 +32,7 @@ RUN sudo -u ipy mkdir -p /home/ipy/bin /home/ipy/.matplotlib /home/ipy/.ipython 
 
 # Adding script necessary to start ipython notebook server.
 ADD ./bin/run-nbserver.sh /home/ipy/bin/run-nbserver.sh
-ADD ./conf/ipython/ipython_notebook_config_extra.py /home/ipy/.python/ipython_notebook_config_extra.py
+ADD ./conf/ipython/ipython_notebook_config_extra.py /home/ipy/.ipython/ipython_notebook_config_extra.py
 RUN chown ipy:ipy /home/ipy/.python/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh && chmod +x /home/ipy/bin/run-nbserver.sh
 
 RUN mkdir -p /var/run/sshd
@@ -41,8 +41,10 @@ RUN echo "root:Zoh7sooGh\um" | chpasswd
 ENV IPYTHONDIR /home/ipy/.ipython
 ENV MPLCONFIGDIR /home/ipy/.matplotlib
 
+# Exposing ports 22 == ssh, 8888 == ipython-notebook, 9001 == supervisord.
 EXPOSE 22
 EXPOSE 8888
+EXPOSE 9001
 
 # Make sure that file ownership and permissions are correct.
 RUN chown -R 0:0 /etc/supervisor.d/ /root/.ssh/authorized_keys; chmod 400 /root/.ssh/authorized_keys

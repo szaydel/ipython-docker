@@ -27,5 +27,6 @@
 
 /usr/bin/ipython notebook \
 --pylab=inline \
+--ip=0.0.0.0 \
 --BaseIPythonApplication.extra_config_file=$IPYTHONDIR/ipython_notebook_config_extra.py \
 --BaseIPythonApplication.profile=$IPYTHON_PROFILE
