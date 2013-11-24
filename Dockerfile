@@ -10,7 +10,7 @@ ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
 ADD ./conf/ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu quantal main universe" > /etc/apt/sources.list
+RUN echo "deb http://archive.ubuntu.com/ubuntu saucy main universe" > /etc/apt/sources.list
 RUN apt-get update
 
 RUN cd /tmp; printf "%s\n" "check_certificate = off" "check_certificate = off" "timeout = 90" "tries = 2" "wait = 15" >> .wgetrc
