@@ -1,11 +1,13 @@
 #!/bin/bash
 
-cd /tmp; wget https://pypi.python.org/packages/source/d/distribute/distribute-0.6.49.tar.gz -O - | tar xzf -
+PREFIX=/opt/local/anaconda
+PKG=Miniconda-2.0.3-Linux-x86_64.sh
+wget http://repo.continuum.io/miniconda/$PKG
+chmod +x ./$PKG; ./$PKG -b -p $PREFIX
 
-python distribute-0.6.49/setup.py install; rc=$?
+export PATH=$PREFIX/bin:PATH
+conda install --yes --file /root/packages.list
 
-[[ ${rc} -eq 0 ]] && rm -rf distribute-0.6.49 || exit 1
-
-wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python
-
-pip install supervisor
+rm $PKG packages.list
+$PREFIX/bin/pip install --pre ggplot # Python implementation of ggplot.
+$PREFIX/bin/pip install --egg --no-deps --pre supervisor
