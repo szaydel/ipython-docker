@@ -5,8 +5,7 @@ PKG=Miniconda-2.0.3-Linux-x86_64.sh
 wget http://repo.continuum.io/miniconda/$PKG
 chmod +x ./$PKG; ./$PKG -b -p $PREFIX
 
-export PATH=$PREFIX/bin:PATH
-conda install --yes --file /root/packages.list
+$PREFIX/conda install --yes --file /root/packages.list
 
 rm $PKG packages.list
 $PREFIX/bin/pip install --pre ggplot # Python implementation of ggplot.

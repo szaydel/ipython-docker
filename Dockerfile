@@ -15,7 +15,7 @@ RUN apt-get update
 
 RUN cd /tmp; printf "%s\n" "check_certificate = off" "check_certificate = off" "timeout = 90" "tries = 2" "wait = 15" >> .wgetrc
 
-RUN apt-get install -y --no-install-recommends openssh-server
+RUN apt-get install -y --no-install-recommends openssh-server bzip2 wget
 
 # Add username with which ipython notebook will be started. 
 RUN useradd -D --shell=/bin/bash; \
@@ -25,8 +25,8 @@ RUN useradd -D --shell=/bin/bash; \
 	sudo -u ipy mkdir -p /home/ipy/bin /home/ipy/.matplotlib /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
 
 # Add the packages 
-ADD ./conf/conda/packages.list /root
-ADD conf/conda/.condarc /root
+ADD ./conf/conda/packages.list /root/packages.list
+ADD conf/conda/.condarc /root/.condarc
 
 # Bootstrap Anaconda installation in ipy's home directory
 RUN chmod +x /tmp/bootstrap-py.sh && /tmp/bootstrap-py.sh; rm /tmp/bootstrap-py.sh
