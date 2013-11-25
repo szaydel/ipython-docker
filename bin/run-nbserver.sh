@@ -21,11 +21,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+ANACONDA_BIN=/opt/local/anaconda/bin
+PATH=${ANACONDA_BIN}:$PATH # Place Anaconda delivered Python is in path.
+
+IPYTHON_CMD=/opt/local/anaconda/bin/ipython
 # If there is not a profile directory we will create it.
 [[ ! -d $IPYTHONDIR/profile_$IPYTHON_PROFILE ]] && \
-    /usr/bin/ipython profile create $IPYTHON_PROFILE
+    ${IPYTHON_CMD} profile create $IPYTHON_PROFILE
 
-/usr/bin/ipython notebook \
+${IPYTHON_CMD} notebook \
 --pylab=inline \
 --ip=0.0.0.0 \
 --BaseIPythonApplication.extra_config_file=$IPYTHONDIR/ipython_notebook_config_extra.py \
