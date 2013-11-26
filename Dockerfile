@@ -1,21 +1,35 @@
-# VERSION 1.0.5
+# VERSION 1.0.7
 
-FROM 0xffea/saucy-server-cloudimg-amd64:latest
+FROM tianon/ubuntu:13.04
 MAINTAINER Sam Zaydel "szaydel@gmail.com"
 
-ENV WGETRC /tmp/.wgetrc
+ENV WGETRC /root/.wgetrc
+
 ADD ./conf/supervisord/ipynotebook.conf /etc/supervisor.d/ipynotebook.conf
 ADD ./conf/supervisord/sshd.conf /etc/supervisor.d/sshd.conf
 ADD ./conf/supervisord/supervisord.conf /etc/supervisord.conf
 ADD ./conf/ssh/authorized_keys /root/.ssh/authorized_keys
 ADD ./bin/bootstrap-py.sh /tmp/bootstrap-py.sh
+ADD ./arch/fonts.tar.bz2 /tmp/fonts.tar.bz2
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu saucy main universe" > /etc/apt/sources.list
-RUN apt-get update
+# Add the packages.list and .condarc config file.
+ADD ./conf/conda/packages.list /root/packages.list
+ADD ./conf/conda/.condarc /root/.condarc
 
-RUN cd /tmp; printf "%s\n" "check_certificate = off" "check_certificate = off" "timeout = 90" "tries = 2" "wait = 15" >> .wgetrc
+RUN echo "deb http://archive.ubuntu.com/ubuntu raring main universe" >> /etc/apt/sources.list \
+	&& echo "deb http://archive.canonical.com/ $(lsb_release -sc) partner" >> /etc/apt/sources.list
 
-RUN apt-get install -y --no-install-recommends openssh-server bzip2 wget
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	openssh-server \
+	bzip2 \
+	sudo \
+	wget
+
+# Create fonts directory and unpack fonts
+RUN mkdir -p /usr/share/fonts/truetype \
+	&& cd /usr/share/fonts/truetype \
+	&& tar xjvf /tmp/fonts.tar.bz2; \
+	rm -r /tmp/fonts.tar.bz2
 
 # Add username with which ipython notebook will be started. 
 RUN useradd -D --shell=/bin/bash; \
@@ -24,17 +38,17 @@ RUN useradd -D --shell=/bin/bash; \
 	adduser ipy sudo; \
 	sudo -u ipy mkdir -p /home/ipy/bin /home/ipy/.matplotlib /home/ipy/.ipython /home/ipy/ipynotebooks /home/ipy/.ssh
 
-# Add the packages 
-ADD ./conf/conda/packages.list /root/packages.list
-ADD conf/conda/.condarc /root/.condarc
-
 # Bootstrap Anaconda installation in ipy's home directory
-RUN chmod +x /tmp/bootstrap-py.sh && /tmp/bootstrap-py.sh; rm /tmp/bootstrap-py.sh
+RUN chmod +x /tmp/bootstrap-py.sh \
+	&& /tmp/bootstrap-py.sh; \
+	rm /tmp/bootstrap-py.sh
 
 # Adding script necessary to start ipython notebook server.
 ADD ./bin/run-nbserver.sh /home/ipy/bin/run-nbserver.sh
 ADD ./conf/ipython/ipython_notebook_config_extra.py /home/ipy/.ipython/ipython_notebook_config_extra.py
-RUN chown ipy:ipy /home/ipy/.ipython/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh && chmod +x /home/ipy/bin/run-nbserver.sh
+
+RUN chown ipy:ipy /home/ipy/.ipython/ipython_notebook_config_extra.py /home/ipy/bin/run-nbserver.sh \
+	&& chmod +x /home/ipy/bin/run-nbserver.sh
 
 RUN mkdir -p /var/run/sshd
 RUN echo "root:Zoh7sooGh\um" | chpasswd
